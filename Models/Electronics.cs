@@ -1,13 +1,13 @@
 class Electronics : Product
 {
 
-    private string Brand { get; set; }
+    public string Brand { get; set; }
 
-    private decimal VoltageVolts { get; set; }
+    public decimal VoltageVolts { get; set; }
 
-    private string VoltageType { get; set; }
+    public string VoltageType { get; set; }
 
-    private string ModelNumber { get; set; }
+    public string ModelNumber { get; set; }
 
     public Electronics(string name, decimal price, string brand, decimal voltageVolts, string voltageType, string modelNumber) : base(name, price)
     {
@@ -17,7 +17,7 @@ class Electronics : Product
         this.ModelNumber = modelNumber;
     }
 
-    override public string GetDescription()
+    public override string GetDescription()
     {
         return this.Brand;
     }

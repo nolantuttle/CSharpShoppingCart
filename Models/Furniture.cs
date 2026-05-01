@@ -1,11 +1,11 @@
 class Furniture : Product
 {
 
-    private string Brand { get; set; }
+    public string Brand { get; set; }
 
-    private string Material { get; set; }
+    public string Material { get; set; }
 
-    private decimal WeightKg { get; set; }
+    public decimal WeightKg { get; set; }
 
     public Furniture(string name, decimal price, string brand, string material, decimal weightKg) : base(name, price)
     {
@@ -14,7 +14,7 @@ class Furniture : Product
         this.WeightKg = weightKg;
     }
 
-    override public string GetDescription()
+    public override string GetDescription()
     {
         return this.Brand;
     }

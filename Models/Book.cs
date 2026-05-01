@@ -1,11 +1,11 @@
 class Book : Product
 {
 
-    private int Rating { get; set; }
+    public int Rating { get; set; }
 
-    private string Author { get; set; }
+    public string Author { get; set; }
 
-    private string Genre { get; set; }
+    public string Genre { get; set; }
 
     public Book(string name, decimal price, int rating, string author, string genre) : base(name, price)
     {
@@ -14,7 +14,7 @@ class Book : Product
         this.Genre = genre;
     }
 
-    override public string GetDescription()
+    public override string GetDescription()
     {
         return this.Author;
     }
