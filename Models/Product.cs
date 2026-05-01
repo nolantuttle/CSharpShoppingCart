@@ -6,7 +6,7 @@ abstract class Product
     /// <summary>
     /// Get/set name of the product
     /// </summary>
-    protected string Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// Get/set price of the product

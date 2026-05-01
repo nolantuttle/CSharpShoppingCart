@@ -19,7 +19,7 @@ class Electronics : Product
 
     public override string GetDescription()
     {
-        return this.Brand;
+        return $"Name: {Name} from {Brand}, Price: {Price:C}, Max Input Voltage: {VoltageVolts:F2}V {VoltageType}, Model Number: {ModelNumber}";
     }
 
     public override decimal CalculateDiscount()

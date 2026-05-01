@@ -16,7 +16,7 @@ class Furniture : Product
 
     public override string GetDescription()
     {
-        return this.Brand;
+        return $"Name: {Name} from {Brand}, Price: {Price:C}, Material: {Material}, Weight: {WeightKg}kg";
     }
 
     public override decimal CalculateDiscount()

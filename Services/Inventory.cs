@@ -1,6 +1,6 @@
 class Inventory
 {
-    private List<Product> Stock { get; set; }
+    private List<Product> Stock { get; } = new List<Product>();
 
     public Inventory()
     {
@@ -9,7 +9,7 @@ class Inventory
 
     public void AddProduct(Product product)
     {
-        Stock.Append(product);
+        Stock.Add(product);
     }
 
     public void RemoveProduct(Product product)
@@ -19,14 +19,14 @@ class Inventory
 
     public Product GetProduct(string name)
     {
-        return null;
+        return Stock.FirstOrDefault(p => p.Name == name);
     }
 
     public void DisplayInventory()
     {
-        for (int i = 0; i < 1; i++)
+        foreach (Product product in Stock)
         {
-            Console.WriteLine(Stock.ElementAt(i));
+            Console.WriteLine(product.GetDescription());
         }
 
     }
