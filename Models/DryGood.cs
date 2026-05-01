@@ -21,6 +21,6 @@ class DryGood : Product
 
     public override decimal CalculateDiscount()
     {
-        return 7.5m;
+        return 0.075m;
     }
 }

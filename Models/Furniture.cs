@@ -21,6 +21,6 @@ class Furniture : Product
 
     public override decimal CalculateDiscount()
     {
-        return 10.0m;
+        return 0.1m;
     }
 }
