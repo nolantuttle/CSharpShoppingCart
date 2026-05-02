@@ -1,3 +1,7 @@
-﻿DryGood dryGood1 = new DryGood("beans", 10.0m, "Bush's", 0.5m, new DateTime(2030, 09, 27));
+﻿// Seed some test data
+Inventory inventory = new Inventory();
+Book book = new Book("The Pragmatic Programmer", 29.99m, 4, "Hunt & Thomas", "Technology");
+inventory.AddProduct(book, 10);
 
-Console.WriteLine(dryGood1.GetDescription());
+// Verify it works
+inventory.DisplayInventory();

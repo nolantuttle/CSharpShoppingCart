@@ -2,10 +2,7 @@ using Microsoft.EntityFrameworkCore;
 class Inventory
 {
 
-    public Inventory()
-    {
-
-    }
+    public Inventory() { }
 
     /// <summary>
     /// Admin-facing method for adding a new product to the store's inventory.
@@ -19,7 +16,7 @@ class Inventory
         {
             return false;
         }
-        if (context.Products.Find(product.Id) == null)
+        if (context.Products.Any(p => p.Name == product.Name))  // Name guard, no duplicate product names
         {
             context.Products.Add(product);  // Adds to primary product table
             context.SaveChanges();  // IMPORTANT: save changes before modifying new db context in RestoreStock()

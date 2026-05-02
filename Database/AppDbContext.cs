@@ -12,7 +12,7 @@ class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-        options.UseSqlite($"Data Source={AppDomain.CurrentDomain.BaseDirectory}shoppingcart.db");
+        options.UseSqlite($"Data Source=shoppingcart.db");
     }
 
     /// <summary>
@@ -28,4 +28,6 @@ class AppDbContext : DbContext
             .HasValue<DryGood>("DryGood")
             .HasValue<Furniture>("Furniture");
     }
+
+
 }
