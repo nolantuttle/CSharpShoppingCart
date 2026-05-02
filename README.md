@@ -21,7 +21,7 @@ A console-based shopping cart simulator built in C# as a revamp of an earlier Ja
 ## OOP Pillars
 
 ### Encapsulation
-All fields across every class are declared `private` or `protected` and exposed through C# auto-properties with controlled access modifiers. For example, `Price` on `Product` uses `protected decimal Price { get; set; }` — readable by subclasses, not writable by external code. Mutation happens only through well-defined public methods like `Deduct()` and `Refund()` on `User`.
+Fields are  exposed through C# auto-properties with controlled access modifiers appropriate to each class. For example, `Price` on `Product` uses `protected decimal Price { get; set; }` — readable by subclasses, not writable by external code. Mutation happens only through well-defined public methods like `Deduct()` and `Refund()` on `User`.
 
 ### Abstraction
 `Product` is declared `abstract` — it cannot be instantiated directly and defines the contract that all product types must fulfill. `GetDescription()` is abstract, meaning every subclass is required by the compiler to provide its own implementation. `CalculateDiscount()` is `virtual`, providing a sensible default that subclasses may override.
