@@ -7,6 +7,9 @@ class AppDbContext : DbContext
 
     public DbSet<Cart> Carts { get; set; }
 
+    public DbSet<InventoryItem> InventoryItems { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
         options.UseSqlite($"Data Source={AppDomain.CurrentDomain.BaseDirectory}shoppingcart.db");

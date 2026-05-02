@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 class Inventory
 {
 
@@ -6,39 +7,36 @@ class Inventory
 
     }
 
-    public void AddProduct(Product product)
+    public void AddProduct(InventoryItem product)
     {
         using var context = new AppDbContext();
-        context.Products.Add(product);
+        context.InventoryItems.Add(product);
         context.SaveChanges();
     }
 
-    public void RemoveProduct(Product product)
+    public void RemoveProduct(InventoryItem product)
     {
         using var context = new AppDbContext();
-        var remove = context.Products.Find(product.Id);
+        var remove = context.InventoryItems.Find(product.Id);
         if (remove != null)
         {
-            context.Products.Remove(remove);
+            context.InventoryItems.Remove(remove);
         }
         context.SaveChanges();
     }
 
-    public Product GetProduct(string name)
+    public InventoryItem GetProduct(string name)
     {
         using var context = new AppDbContext();
-        var product = context.Products.FirstOrDefault(p => p.Name == name);
+        InventoryItem product = context.InventoryItems
+        .Include(p => p.Product)
+        .FirstOrDefault(p => p.Product.Name == name);
         return product;
     }
 
     public void DisplayInventory()
     {
-        using var context = new AppDbContext();
-        List<Product> products = context.Products.ToList();
-        foreach (Product product in products)
-        {
-            Console.WriteLine(product.GetDescription());
-        }
+
 
     }
 
