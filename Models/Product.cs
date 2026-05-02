@@ -11,7 +11,7 @@ abstract class Product
     /// <summary>
     /// Get/set price of the product
     /// </summary>
-    protected decimal Price { get; set; }
+    public decimal Price { get; set; }
 
     /// <summary>
     /// Primary key for each product
@@ -42,7 +42,7 @@ abstract class Product
     /// <returns>Discount as a decimal value</returns>
     public virtual decimal CalculateDiscount()
     {
-        return 0m;
+        return 1m;
     }
 
 }

@@ -23,6 +23,6 @@ class Book : Product
 
     public override decimal CalculateDiscount()
     {
-        return 0.15m;
+        return 0.90m;    // 10% off
     }
 }

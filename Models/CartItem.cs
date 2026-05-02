@@ -1,6 +1,8 @@
 class CartItem
 {
-
+    /// <summary>
+    /// Primary key for CartItem (does not match Product Pk!!)
+    /// </summary>  
     public int Id { get; set; }
 
     public Product Product { get; set; }

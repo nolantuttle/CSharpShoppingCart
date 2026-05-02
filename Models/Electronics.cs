@@ -26,6 +26,6 @@ class Electronics : Product
 
     public override decimal CalculateDiscount()
     {
-        return base.CalculateDiscount();
+        return base.CalculateDiscount();    // No discount
     }
 }
