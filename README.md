@@ -70,6 +70,8 @@ A `Book`, `Electronics`, and `Furniture` in the same cart each describe themselv
 
 ```
 CSharpShoppingCart/
+├── Database/
+|   ├── AppDbContext.cs     # EF Core DbContext
 ├── Models/
 │   ├── Product.cs          # Abstract base class
 │   ├── Book.cs             # Subclass — Rating, Author, Genre
@@ -79,10 +81,10 @@ CSharpShoppingCart/
 ├── Services/
 │   ├── Inventory.cs        # Store stock management
 │   └── ShoppingCart.cs     # Per-user cart logic
-├── User.cs                 # Auth, role flag, money balance
+├── Users/
+|   ├──User.cs              # Auth, role flag, money balance
 ├── Program.cs              # Entry point, menu loop
-├── AppDbContext.cs          # EF Core DbContext
-└── CSharpShoppingCart.csproj
+└── ShoppingCart.csproj
 ```
 
 ---
