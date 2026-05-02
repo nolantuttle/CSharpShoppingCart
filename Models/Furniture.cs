@@ -7,6 +7,8 @@ class Furniture : Product
 
     public decimal WeightKg { get; set; }
 
+    public Furniture() : base("", 0m) { }
+
     public Furniture(string name, decimal price, string brand, string material, decimal weightKg) : base(name, price)
     {
         this.Brand = brand;

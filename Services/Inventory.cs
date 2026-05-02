@@ -1,30 +1,41 @@
 class Inventory
 {
-    private List<Product> Stock { get; } = new List<Product>();
 
     public Inventory()
     {
-        this.Stock = new List<Product>();
+
     }
 
     public void AddProduct(Product product)
     {
-        Stock.Add(product);
+        using var context = new AppDbContext();
+        context.Products.Add(product);
+        context.SaveChanges();
     }
 
     public void RemoveProduct(Product product)
     {
-        Stock.Remove(product);
+        using var context = new AppDbContext();
+        var remove = context.Products.Find(product.Id);
+        if (remove != null)
+        {
+            context.Products.Remove(remove);
+        }
+        context.SaveChanges();
     }
 
     public Product GetProduct(string name)
     {
-        return Stock.FirstOrDefault(p => p.Name == name);
+        using var context = new AppDbContext();
+        var product = context.Products.FirstOrDefault(p => p.Name == name);
+        return product;
     }
 
     public void DisplayInventory()
     {
-        foreach (Product product in Stock)
+        using var context = new AppDbContext();
+        List<Product> products = context.Products.ToList();
+        foreach (Product product in products)
         {
             Console.WriteLine(product.GetDescription());
         }

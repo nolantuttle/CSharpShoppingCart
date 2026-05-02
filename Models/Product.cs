@@ -14,6 +14,11 @@ abstract class Product
     protected decimal Price { get; set; }
 
     /// <summary>
+    /// Primary key for each product
+    /// </summary>
+    public int Id { get; set; }
+
+    /// <summary>
     /// Paramaterized constructor for Product
     /// </summary>
     /// <param name="name">Name of product</param>

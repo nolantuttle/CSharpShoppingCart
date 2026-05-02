@@ -9,6 +9,8 @@ class Electronics : Product
 
     public string ModelNumber { get; set; }
 
+    public Electronics() : base("", 0m) { }
+
     public Electronics(string name, decimal price, string brand, decimal voltageVolts, string voltageType, string modelNumber) : base(name, price)
     {
         this.Brand = brand;

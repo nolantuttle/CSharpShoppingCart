@@ -7,6 +7,8 @@ class DryGood : Product
 
     public DateTime ExpiryDate { get; set; }
 
+    public DryGood() : base("", 0m) { }
+
     public DryGood(string name, decimal price, string brand, decimal weightKg, DateTime expiryDate) : base(name, price)
     {
         this.Brand = brand;

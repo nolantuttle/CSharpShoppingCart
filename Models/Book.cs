@@ -7,6 +7,8 @@ class Book : Product
 
     public string Genre { get; set; }
 
+    public Book() : base("", 0m) { }
+
     public Book(string name, decimal price, int rating, string author, string genre) : base(name, price)
     {
         this.Rating = rating;

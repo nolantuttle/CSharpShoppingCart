@@ -1,11 +1,11 @@
-class ShoppingCart
+class Cart
 {
 
-    private List<Product> Cart { get; set; }
+    private List<Product> Items { get; set; }
 
-    public ShoppingCart()
+    public Cart()
     {
-        this.Cart = new List<Product>();
+        this.Items = new List<Product>();
     }
 
     public void AddItem(Product product, int quantity)
@@ -27,6 +27,6 @@ class ShoppingCart
 
     public void Clear()
     {
-        Cart.Clear();
+        Items.Clear();
     }
 }
