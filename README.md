@@ -44,7 +44,7 @@ class Book : Product
     public Book(string name, decimal price, int rating, string author, string genre)
         : base(name, price)
     {
-        Rating = ratig;
+        Rating = rating;
         Author = author;
         Genre = genre;
     }
@@ -72,7 +72,7 @@ A `Book`, `Electronics`, and `Furniture` in the same cart each describe themselv
 CSharpShoppingCart/
 ├── Models/
 │   ├── Product.cs          # Abstract base class
-│   ├── Book.cs             # Subclass — Author, ISBN, Genre
+│   ├── Book.cs             # Subclass — Rating, Author, Genre
 │   ├── Electronics.cs      # Subclass — Brand, VoltageRating, ModelNumber
 │   ├── DryGood.cs          # Subclass — Brand, WeightKg, ExpiryDate
 │   └── Furniture.cs        # Subclass — Brand, Material, WeightKg
