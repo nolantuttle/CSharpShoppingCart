@@ -48,12 +48,39 @@ class Cart
     /// </summary>
     /// <param name="cartItem">Item to be removed from cart</param>
     /// <param name="quantity">Quantity of cart item to remove</param>
+    /// <param name="inventory">Up-to-date instance of the inventory being checked</param>
     /// <returns>True on successful cart item removal, false for exception</returns>
-    public bool RemoveItem(CartItem cartItem, int quantity)
+    public bool RemoveItem(CartItem cartItem, int quantity, Inventory inventory)
     {
-        var inventory = new Inventory();
-        if (!inventory.RestoreStock(cartItem.Product, quantity))
+        if (quantity <= 0)
+        {
             return false;
+        }
+        if (cartItem.Quantity < quantity)
+        {
+            return false;
+        }
+
+        if (!inventory.RestoreStock(cartItem.Product, quantity))
+        {
+            return false;
+        }
+
+        using var context = new AppDbContext();
+        var cartItemToRemove = context.CartItems.Find(cartItem.Id); // Find cartItem by its Pk
+        if (cartItemToRemove is null)
+        {
+            return false;
+        }
+        if (cartItem.Quantity == quantity)  // Removing all quantity of cartItem
+        {
+            context.CartItems.Remove(cartItemToRemove);
+        }
+        else    // Removing only some cartItem quantity
+        {
+            cartItemToRemove.Quantity -= quantity;
+        }
+        context.SaveChanges();
         return true;
     }
 
@@ -85,8 +112,9 @@ class Cart
     /// <summary>
     /// Removes each CartItem and its full quantity from cart
     /// </summary>
+    /// <param name="inventory">We must pass in an Inventory instance here to return all cart items to stock</param>
     /// <returns>True on success, false on failure</returns>
-    public bool Clear()
+    public bool Clear(Inventory inventory)
     {
         using var context = new AppDbContext();
         var items = context.CartItems
@@ -94,7 +122,7 @@ class Cart
             .ToList();
         foreach (CartItem c in items)
         {
-            if (!RemoveItem(c, c.Quantity))
+            if (!RemoveItem(c, c.Quantity, inventory))
             {
                 return false;
             }

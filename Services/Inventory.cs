@@ -18,9 +18,12 @@ class Inventory
         }
         if (context.Products.Any(p => p.Name == product.Name))  // Name guard, no duplicate product names
         {
-            context.Products.Add(product);  // Adds to primary product table
-            context.SaveChanges();  // IMPORTANT: save changes before modifying new db context in RestoreStock()
-            RestoreStock(product, quantity);    // Adds product to InventoryItems
+            return false;
+        }
+        context.Products.Add(product);  // Adds to primary product table
+        context.SaveChanges();  // IMPORTANT: save changes before modifying new db context in RestoreStock()
+        if (RestoreStock(context, product, quantity))    // Adds product to InventoryItems
+        {
             return true;
         }
         return false;
@@ -29,10 +32,15 @@ class Inventory
     public void RemoveProduct(InventoryItem inventoryItem)
     {
         using var context = new AppDbContext();
-        var remove = context.InventoryItems.Find(inventoryItem.Product.Id);
+        var remove = context.InventoryItems.Find(inventoryItem.Id);
         if (remove != null)
         {
-            context.InventoryItems.Remove(remove);
+            var product = context.Products.Find(inventoryItem.Product.Id);
+            if (product is not null)
+            {
+                context.InventoryItems.Remove(remove);  // Remove InventoryItem
+                context.Products.Remove(product);   // Remove Product
+            }
         }
         context.SaveChanges();
     }
@@ -40,27 +48,33 @@ class Inventory
     /// <summary>
     /// Adds passed in Product and its quantity back if item is found in store inventory, if not found, creates a new inventory item object. We create a new object because store item behavior is remove item if quantity == 0.
     /// </summary>
+    /// <param name="context">Db context so only 1 context is used between Add() and RestoreStock()</param> 
     /// <param name="product">Product to restore stock for</param>
     /// <param name="quantity">Amount of stock to restore</param>
     /// <returns>True on successful stock restore, false upon failure</returns>
-    public bool RestoreStock(Product product, int quantity)
+    public bool RestoreStock(AppDbContext context, Product product, int quantity)
     {
-        using var context = new AppDbContext();
         var existing = context.InventoryItems
             .Include(i => i.Product)
             .FirstOrDefault(i => i.Product.Id == product.Id);
+
         if (existing is not null)
         {
             existing.Quantity += quantity;
-            context.SaveChanges();
-            return true;
         }
         else
         {
             context.InventoryItems.Add(new InventoryItem(product, quantity));
-            context.SaveChanges();
-            return true;
         }
+        context.SaveChanges();
+        return true;
+    }
+
+    // Overloaded restore stock, called by Cart, opens its own context
+    public bool RestoreStock(Product product, int quantity)
+    {
+        using var context = new AppDbContext();
+        return RestoreStock(context, product, quantity);
     }
 
     public InventoryItem GetProduct(string name)
