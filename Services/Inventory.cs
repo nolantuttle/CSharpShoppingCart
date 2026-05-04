@@ -80,10 +80,15 @@ class Inventory
     public InventoryItem GetProduct(string name)
     {
         using var context = new AppDbContext();
-        InventoryItem product = context.InventoryItems
+        var inventoryItem = context.InventoryItems
         .Include(p => p.Product)
         .FirstOrDefault(p => p.Product.Name == name);
-        return product;
+        if (inventoryItem is not null)
+        {
+            return inventoryItem;
+        }
+        return null;
+
     }
 
     public void DisplayInventory()

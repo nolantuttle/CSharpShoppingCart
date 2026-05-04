@@ -18,7 +18,7 @@ class Book : Product
 
     public override string GetDescription()
     {
-        return $"Name: {Name} written by {Author}, Price: {Price:C}, Genre: {Genre} Rating: {Rating}/5";
+        return $"Name: {Name} written by {Author} | Price: {Price:C} | Genre: {Genre} | Rating: {Rating}/5";
     }
 
     public override decimal CalculateDiscount()

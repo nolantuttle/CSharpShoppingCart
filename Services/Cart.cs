@@ -7,6 +7,11 @@ class Cart
     /// </summary>
     public int Id { get; set; }
 
+    /// <summary>
+    /// Foreign key to link each Cart to a User
+    /// </summary>
+    public int UserId { get; set; }
+
     public Cart() { }
 
     /// <summary>
@@ -29,18 +34,17 @@ class Cart
         var existing = context.CartItems
         .Include(p => p.Product)
         .FirstOrDefault(p => p.Product.Id == inventoryItem.Product.Id); // IMPORTANT: We must compare using Product's Pk, not inventoryItem Pk! Product Pk is the source of truth.
+        var trackedProduct = context.Products.Find(inventoryItem.Product.Id);   // Pull from latest db context, which is tracking this inventoryItem.
         if (existing != null)    // Product is already in cart! We must add more quantity.
         {
             existing.Quantity += quantity;
-            context.SaveChanges();
-            return true;
         }
-        else    // Product is not in cart, make new CartItem and add that quantity!
+        else if (trackedProduct != null)   // Product is not in cart, but is valid. Make new CartItem and add quantity
         {
-            context.CartItems.Add(new CartItem(inventoryItem.Product, quantity));
-            context.SaveChanges();
-            return true;
+            context.CartItems.Add(new CartItem(trackedProduct, quantity));
         }
+        context.SaveChanges();
+        return true;
     }
 
     /// <summary>
@@ -50,29 +54,27 @@ class Cart
     /// <param name="quantity">Quantity of cart item to remove</param>
     /// <param name="inventory">Up-to-date instance of the inventory being checked</param>
     /// <returns>True on successful cart item removal, false for exception</returns>
-    public bool RemoveItem(CartItem cartItem, int quantity, Inventory inventory)
+    public bool RemoveItem(int cartItemPk, int quantity, Inventory inventory)
     {
-        if (quantity <= 0)
-        {
-            return false;
-        }
-        if (cartItem.Quantity < quantity)
-        {
-            return false;
-        }
-
-        if (!inventory.RestoreStock(cartItem.Product, quantity))
-        {
-            return false;
-        }
-
         using var context = new AppDbContext();
-        var cartItemToRemove = context.CartItems.Find(cartItem.Id); // Find cartItem by its Pk
+        var cartItemToRemove = context.CartItems
+        .Include(c => c.Product)
+        .FirstOrDefault(c => c.Id == cartItemPk); // Find cartItem by its Pk, include Product row
         if (cartItemToRemove is null)
         {
             return false;
         }
-        if (cartItem.Quantity == quantity)  // Removing all quantity of cartItem
+        if (quantity <= 0 || cartItemToRemove.Quantity < quantity)
+        {
+            return false;
+        }
+
+        if (!inventory.RestoreStock(cartItemToRemove.Product, quantity))
+        {
+            return false;
+        }
+
+        if (cartItemToRemove.Quantity == quantity)  // Removing all quantity of cartItem
         {
             context.CartItems.Remove(cartItemToRemove);
         }
@@ -105,7 +107,7 @@ class Cart
             .ToList();
         foreach (CartItem c in items)
         {
-            Console.WriteLine(c.Product.GetDescription() + $"\n Quantity: {c.Quantity}");
+            Console.WriteLine($"{c.Id}" + c.Product.GetDescription() + $"\nQuantity: {c.Quantity}");
         }
     }
 
@@ -122,7 +124,7 @@ class Cart
             .ToList();
         foreach (CartItem c in items)
         {
-            if (!RemoveItem(c, c.Quantity, inventory))
+            if (!RemoveItem(c.Id, c.Quantity, inventory))
             {
                 return false;
             }

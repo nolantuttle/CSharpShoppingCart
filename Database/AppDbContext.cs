@@ -28,6 +28,4 @@ class AppDbContext : DbContext
             .HasValue<DryGood>("DryGood")
             .HasValue<Furniture>("Furniture");
     }
-
-
 }

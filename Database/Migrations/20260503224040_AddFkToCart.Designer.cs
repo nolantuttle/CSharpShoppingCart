@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ShoppingCart.Database.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260503224040_AddFkToCart")]
+    partial class AddFkToCart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.7");
@@ -26,9 +29,6 @@ namespace ShoppingCart.Database.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Carts");
                 });
@@ -103,12 +103,6 @@ namespace ShoppingCart.Database.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("Money")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -213,15 +207,6 @@ namespace ShoppingCart.Database.Migrations
                     b.HasDiscriminator().HasValue("Furniture");
                 });
 
-            modelBuilder.Entity("Cart", b =>
-                {
-                    b.HasOne("User", null)
-                        .WithOne("cart")
-                        .HasForeignKey("Cart", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("CartItem", b =>
                 {
                     b.HasOne("Product", "Product")
@@ -242,12 +227,6 @@ namespace ShoppingCart.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("User", b =>
-                {
-                    b.Navigation("cart")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

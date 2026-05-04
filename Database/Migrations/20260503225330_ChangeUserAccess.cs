@@ -1,0 +1,51 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace ShoppingCart.Database.Migrations
+{
+    /// <inheritdoc />
+    public partial class ChangeUserAccess : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<bool>(
+                name: "IsAdmin",
+                table: "Users",
+                type: "INTEGER",
+                nullable: false,
+                defaultValue: false);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Carts_UserId",
+                table: "Carts",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Carts_Users_UserId",
+                table: "Carts",
+                column: "UserId",
+                principalTable: "Users",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Carts_Users_UserId",
+                table: "Carts");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Carts_UserId",
+                table: "Carts");
+
+            migrationBuilder.DropColumn(
+                name: "IsAdmin",
+                table: "Users");
+        }
+    }
+}
