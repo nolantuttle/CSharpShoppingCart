@@ -75,6 +75,7 @@ class User
         if (user != null)
         {
             user.Money -= amount;
+            this.Money -= amount;
             context.SaveChanges();
             return true;
         }
@@ -87,6 +88,7 @@ class User
         if (user != null)
         {
             user.Money += amount;
+            this.Money += amount;
             context.SaveChanges();
             return true;
         }
@@ -96,5 +98,65 @@ class User
     public bool AddToCart(InventoryItem item, int quantity)
     {
         return this.cart.AddItem(item, quantity);
+    }
+
+    public bool Checkout()
+    {
+        decimal subtotal = cart.GetSubtotal();
+        if (Money < subtotal) return false;
+        if (!Deduct(subtotal)) return false;
+        return cart.Clear();
+    }
+
+    public static bool SetAdminStatus(User requester, string targetUsername, bool value)
+    {
+        if (!requester.IsAdmin) return false;
+        using var context = new AppDbContext();
+        var target = context.Users.FirstOrDefault(u => u.Username == targetUsername);
+        if (target is null) return false;
+        target.IsAdmin = value;
+        context.SaveChanges();
+        return true;
+    }
+
+    public static bool SetBalance(User requester, string targetUsername, decimal amount)
+    {
+        if (!requester.IsAdmin || amount < 0) return false;
+        using var context = new AppDbContext();
+        var target = context.Users.FirstOrDefault(u => u.Username == targetUsername);
+        if (target is null) return false;
+        target.Money = amount;
+        context.SaveChanges();
+        return true;
+    }
+
+    public static bool DeleteUser(User requester, string targetUsername)
+    {
+        if (!requester.IsAdmin) return false;
+        using var context = new AppDbContext();
+        var target = context.Users
+            .Include(u => u.cart)
+            .FirstOrDefault(u => u.Username == targetUsername);
+        if (target is null) return false;
+        if (target.cart != null)
+        {
+            var cartItems = context.CartItems.ToList();
+            context.CartItems.RemoveRange(cartItems);
+            context.Carts.Remove(target.cart);
+        }
+        context.Users.Remove(target);
+        context.SaveChanges();
+        return true;
+    }
+
+    public static void SeedAdmin()
+    {
+        using var context = new AppDbContext();
+        if (context.Users.Any(u => u.IsAdmin)) return;
+        var admin = new User("admin", "admin");
+        admin.IsAdmin = true;
+        admin.Money = 0m;
+        context.Users.Add(admin);
+        context.SaveChanges();
     }
 }

@@ -43,6 +43,19 @@ class Cart
         {
             context.CartItems.Add(new CartItem(trackedProduct, quantity));
         }
+
+        var inventoryItemToUpdate = context.InventoryItems
+            .Include(i => i.Product)
+            .FirstOrDefault(i => i.Product.Id == inventoryItem.Product.Id);
+        if (inventoryItemToUpdate != null)
+        {
+            inventoryItemToUpdate.Quantity -= quantity;
+            if (inventoryItemToUpdate.Quantity == 0)
+            {
+                context.InventoryItems.Remove(inventoryItemToUpdate);
+            }
+        }
+
         context.SaveChanges();
         return true;
     }
@@ -107,16 +120,16 @@ class Cart
             .ToList();
         foreach (CartItem c in items)
         {
-            Console.WriteLine($"{c.Id}" + c.Product.GetDescription() + $"\nQuantity: {c.Quantity}");
+            Console.WriteLine($"Id: {c.Id} " + c.Product.GetDescription() + $"\nQuantity: {c.Quantity}");
         }
     }
 
     /// <summary>
-    /// Removes each CartItem and its full quantity from cart
+    /// Returns all CartItems to inventory and empties cart
     /// </summary>
-    /// <param name="inventory">We must pass in an Inventory instance here to return all cart items to stock</param>
+    /// <param name="inventory">Inventory instance to restore stock to</param>
     /// <returns>True on success, false on failure</returns>
-    public bool Clear(Inventory inventory)
+    public bool ReturnAll(Inventory inventory)
     {
         using var context = new AppDbContext();
         var items = context.CartItems
@@ -129,6 +142,15 @@ class Cart
                 return false;
             }
         }
+        return true;
+    }
+
+    public bool Clear()
+    {
+        using var context = new AppDbContext();
+        var items = context.CartItems.ToList();
+        context.CartItems.RemoveRange(items);
+        context.SaveChanges();
         return true;
     }
 }
